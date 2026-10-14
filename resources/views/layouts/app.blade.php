@@ -13,7 +13,7 @@
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
         <!-- Scripts & Styles -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-surface-canvas text-slate-900 selection:bg-primary-500 selection:text-white">
         <div class="min-h-screen flex flex-col bg-surface-canvas">
@@ -22,9 +22,9 @@
             <!-- Page Heading -->
             @isset($header)
                 <header class="bg-white/90 backdrop-blur-md border-b border-border-subtle sticky top-0 z-30 shadow-card">
-                    <div class="max-w-7xl mx-auto py-5 px-4 sm:px-6 lg:px-8">
+                    <x-container class="py-5">
                         {{ $header }}
-                    </div>
+                    </x-container>
                 </header>
             @endisset
 

@@ -1,12 +1,12 @@
 <x-storefront-layout title="Katalog Alat Kesehatan Multi-Vendor">
     
     <!-- Hero / Headline Banner -->
-    <div class="relative overflow-hidden bg-gradient-to-r from-slate-900 via-primary-950 to-slate-900 text-white py-12 md:py-16 px-4 border-b border-primary-900/40">
+    <div class="relative overflow-hidden bg-gradient-to-r from-slate-900 via-primary-950 to-slate-900 text-white py-12 md:py-16 border-b border-primary-900/40">
         <!-- Ambient decorative blur circles -->
         <div class="absolute -top-24 -left-24 w-96 h-96 bg-primary-600/20 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-secondary-500/20 rounded-full blur-3xl pointer-events-none"></div>
 
-        <div class="max-w-7xl mx-auto relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+        <x-container class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
             <div class="max-w-2xl text-center md:text-left">
                 <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-primary-500/20 text-primary-300 border border-primary-400/30 mb-4">
                     <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse"></span>
@@ -54,11 +54,11 @@
                     @endforeach
                 </div>
             </div>
-        </div>
+        </x-container>
     </div>
 
     <!-- Main Content: Sidebar Filter & Product Grid -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+    <x-container class="py-8"
          x-data="{
              quickViewOpen: false,
              loadingQuickView: false,
@@ -379,5 +379,5 @@
                 </div>
             </div>
         </div>
-    </div>
+    </x-container>
 </x-storefront-layout>

@@ -14,13 +14,13 @@
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
         <!-- Scripts & Styles -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     </head>
     <body class="font-sans antialiased bg-surface-canvas text-slate-800 selection:bg-primary-500 selection:text-white flex flex-col min-h-screen">
 
         <!-- Top Announcement Bar -->
-        <div class="bg-slate-900 text-slate-200 text-xs py-2 px-4 border-b border-slate-800">
-            <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div class="bg-slate-900 text-slate-200 text-xs py-2 border-b border-slate-800">
+            <x-container class="flex flex-col sm:flex-row items-center justify-between gap-2">
                 <div class="flex items-center gap-2">
                     <span class="inline-flex items-center gap-1 text-primary-400 font-semibold uppercase tracking-wider text-[11px] px-2 py-0.5 rounded bg-primary-950/60 border border-primary-800/50">
                         <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -41,13 +41,12 @@
                     <span class="text-slate-600">|</span>
                     <a href="#bantuan" class="hover:text-white transition-colors">Pusat Bantuan</a>
                 </div>
-            </div>
+            </x-container>
         </div>
 
         <!-- Sticky Header & Navbar -->
         <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-border-subtle shadow-card">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between h-20 gap-4 lg:gap-8">
+            <x-container class="flex items-center justify-between h-20 gap-4 lg:gap-8">
                     
                     <!-- Left: Brand Logo -->
                     <div class="flex-shrink-0 flex items-center gap-3">
@@ -286,7 +285,7 @@
                         </div>
                     </form>
                 </div>
-            </div>
+            </x-container>
         </header>
 
         <!-- Main Page Content -->
@@ -296,7 +295,7 @@
 
         <!-- Footer -->
         <footer class="bg-white border-t border-border-subtle mt-16 pt-12 pb-8">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <x-container>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-100">
                     <!-- Brand info -->
                     <div class="md:col-span-1 space-y-3">
@@ -361,7 +360,7 @@
                     <p>© {{ date('Y') }} Medify — Platform Marketplace Alat Kesehatan Multi-Vendor. Hak Cipta Dilindungi.</p>
                     <p class="font-mono text-[11px]">Sistem Asesmen LSP UPNVJT • Tech Stack: Laravel 12 & PostgreSQL</p>
                 </div>
-            </div>
+            </x-container>
         </footer>
 
         <!-- Toast Notifications Component -->

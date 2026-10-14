@@ -13,7 +13,7 @@
         <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
         <!-- Scripts & Styles -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+        @vite(['resources/scss/app.scss', 'resources/js/app.js'])
     </head>
     <body class="font-sans text-slate-900 antialiased bg-surface-canvas selection:bg-primary-500 selection:text-white">
         <div class="min-h-screen flex flex-col sm:justify-center items-center pt-8 sm:pt-0 pb-12 px-4 sm:px-6">

@@ -1,6 +1,6 @@
 <x-storefront-layout :title="$product->name">
     
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+    <x-container class="py-8"
          x-data="{
              selectedImage: '{{ $product->primaryImage ? asset($product->primaryImage->path) : '' }}',
              qty: 1,
@@ -253,5 +253,5 @@
                 </div>
             </div>
         @endif
-    </div>
+    </x-container>
 </x-storefront-layout>

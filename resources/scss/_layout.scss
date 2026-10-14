@@ -1,0 +1,21 @@
+// ==============================================================================
+// Medify — SCSS Layout & Responsive Container System
+// Aligns with Tailwind CSS breakpoint layers & ADR-002
+// ==============================================================================
+
+@layer components {
+  // Standard Container for all core sections: 1280px (max-w-7xl)
+  .page-container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  // Narrow Container for checkout forms, login/registration, and articles: 896px (max-w-4xl)
+  .page-container-narrow {
+    @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  // Fluid Container for full-width sections that need symmetric internal gutters
+  .page-container-fluid {
+    @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+  }
+}

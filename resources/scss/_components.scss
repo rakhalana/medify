@@ -1,0 +1,25 @@
+// ==============================================================================
+// Medify — SCSS Custom Components Enhancements
+// Isolated custom styling without interfering with Tailwind utility classes
+// ==============================================================================
+
+// Card ambient elevation
+.ambient-card {
+  box-shadow: 0 1px 3px 0 rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.02);
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  }
+}
+
+// Medical Monospaced Tag
+.med-code-badge {
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.02em;
+}
+
+// Stepper input buttons in cart & product detail
+.qty-stepper-btn {
+  @apply select-none active:scale-95 transition-transform;
+}
