@@ -94,4 +94,14 @@ class User extends Authenticatable implements MustVerifyEmail
 
         return $this->role->value === $roleValue;
     }
+
+    public function store(): \Illuminate\Database\Eloquent\Relations\HasOne
+    {
+        return $this->hasOne(Store::class, 'owner_user_id');
+    }
+
+    public function city(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(City::class, 'city_id');
+    }
 }

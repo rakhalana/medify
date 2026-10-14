@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             TaxRatesSeeder::class,
             PaymentMethodsSeeder::class,
             UserSeeder::class,
+            StoreAndProductSeeder::class,
         ]);
 
         // Default platform configuration settings

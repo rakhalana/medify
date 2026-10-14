@@ -20,4 +20,14 @@ class City extends Model
             'is_active' => 'boolean',
         ];
     }
+
+    public function stores(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(Store::class, 'city_id');
+    }
+
+    public function users(): \Illuminate\Database\Eloquent\Relations\HasMany
+    {
+        return $this->hasMany(User::class, 'city_id');
+    }
 }
