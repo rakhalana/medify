@@ -76,6 +76,11 @@ class Product extends Model
         return $this->hasOne(ProductImage::class, 'product_id')->oldestOfMany('sort_order');
     }
 
+    public function cartItems(): HasMany
+    {
+        return $this->hasMany(CartItem::class, 'product_id');
+    }
+
     /**
      * Format price to Indonesian Rupiah standard (Rp X.XXX.XXX)
      */
@@ -98,7 +103,7 @@ class Product extends Model
     }
 
     /**
-     * Scope query for case-insensitive keyword search by name or product code.
+     * Scope query for case-insensitive keyword search by name, product code, store name, or category name.
      * Uses LOWER(...) LIKE pattern compatible with both PostgreSQL (using functional index) and SQLite.
      *
      * @param Builder<self> $query
@@ -115,7 +120,13 @@ class Product extends Model
 
         return $query->where(function (Builder $subQuery) use ($termLower) {
             $subQuery->whereRaw('LOWER(name) LIKE ?', [$termLower])
-                ->orWhereRaw('LOWER(code) LIKE ?', [$termLower]);
+                ->orWhereRaw('LOWER(code) LIKE ?', [$termLower])
+                ->orWhereHas('store', function (Builder $storeQuery) use ($termLower) {
+                    $storeQuery->whereRaw('LOWER(name) LIKE ?', [$termLower]);
+                })
+                ->orWhereHas('category', function (Builder $catQuery) use ($termLower) {
+                    $catQuery->whereRaw('LOWER(name) LIKE ?', [$termLower]);
+                });
         });
     }
 }

@@ -4,7 +4,56 @@
          x-data="{
              selectedImage: '{{ $product->primaryImage ? asset($product->primaryImage->path) : '' }}',
              qty: 1,
-             maxStock: {{ $product->stock }}
+             maxStock: {{ $product->stock }},
+             addingToCart: false,
+             addToCart(andRedirect = false) {
+                 if (this.addingToCart) return;
+                 this.addingToCart = true;
+
+                 fetch(`{{ route('ajax.cart.items.add') }}`, {
+                     method: 'POST',
+                     headers: {
+                         'Content-Type': 'application/json',
+                         'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                         'Accept': 'application/json',
+                     },
+                     body: JSON.stringify({
+                         product_id: {{ $product->id }},
+                         quantity: this.qty
+                     })
+                 })
+                 .then(res => res.json())
+                 .then(res => {
+                     if (res.code === 'UNAUTHENTICATED' || res.redirect_url) {
+                         window.location.href = res.redirect_url || '{{ route('login') }}';
+                         return;
+                     }
+
+                     if (res.data) {
+                         window.dispatchEvent(new CustomEvent('cart-updated', {
+                             detail: { count: res.data.total_items_count }
+                         }));
+                         window.dispatchEvent(new CustomEvent('toast', {
+                             detail: { message: res.message, type: 'success' }
+                         }));
+                         if (andRedirect) {
+                             window.location.href = '{{ route('cart.index') }}';
+                         }
+                     } else if (res.message) {
+                         window.dispatchEvent(new CustomEvent('toast', {
+                             detail: { message: res.message, type: 'danger' }
+                         }));
+                     }
+                 })
+                 .catch(() => {
+                     window.dispatchEvent(new CustomEvent('toast', {
+                         detail: { message: 'Gagal menambahkan produk ke keranjang.', type: 'danger' }
+                     }));
+                 })
+                 .finally(() => {
+                     this.addingToCart = false;
+                 });
+             }
          }">
         
         <!-- Breadcrumb Navigation -->
@@ -66,10 +115,11 @@
                 <!-- Right: Product Information & Purchase Panel (7 Cols) -->
                 <div class="lg:col-span-7 space-y-6">
                     
-                    <!-- Code & Title -->
+                    <!-- Category Badge & Title -->
                     <div>
-                        <div class="font-mono text-xs text-slate-400 tracking-wider uppercase mb-1">
-                            Kode Produk: <span class="font-bold text-slate-600">{{ $product->code }}</span>
+                        <div class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold bg-primary-50 text-primary-700 border border-primary-200/60 mb-2">
+                            <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
+                            <span>{{ $product->category->name }}</span>
                         </div>
                         <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
                             {{ $product->name }}
@@ -167,20 +217,22 @@
                             </div>
 
                             <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                                <!-- Direct Action / Cart Ready for Task 012 -->
+                                <!-- Direct Action / Add to Cart -->
                                 <button type="button"
-                                        @click="alert('Produk siap dimasukkan ke keranjang belanja di TASK-012!')"
-                                        class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 bg-white border border-primary-600 text-primary-700 hover:bg-primary-50 font-semibold rounded-xl transition-all shadow-sm active:scale-[0.98]">
+                                        @click="addToCart(false)"
+                                        :disabled="addingToCart"
+                                        class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 bg-white border border-primary-600 text-primary-700 hover:bg-primary-50 font-semibold rounded-xl transition-all shadow-sm active:scale-[0.98] disabled:opacity-50">
                                     <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                                     </svg>
-                                    Tambah ke Keranjang
+                                    <span x-text="addingToCart ? 'Menambahkan...' : 'Tambah ke Keranjang'"></span>
                                 </button>
 
                                 <button type="button"
-                                        @click="alert('Alur checkout langsung akan dihubungkan di TASK-012!')"
-                                        class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg shadow-primary-600/20 active:scale-[0.98]">
-                                    Beli Sekarang
+                                        @click="addToCart(true)"
+                                        :disabled="addingToCart"
+                                        class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-all shadow-md hover:shadow-lg shadow-primary-600/20 active:scale-[0.98] disabled:opacity-50">
+                                    <span>Beli Sekarang</span>
                                 </button>
                             </div>
                         </div>

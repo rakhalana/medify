@@ -75,9 +75,9 @@
                 </span>
             </div>
 
-            <!-- Product Code (JetBrains Mono) -->
-            <div class="font-mono text-[11px] text-slate-400 tracking-wider uppercase mb-1">
-                {{ $product->code }}
+            <!-- Product Category -->
+            <div class="text-[11px] font-semibold text-primary-600 mb-1 truncate">
+                {{ $product->category->name }}
             </div>
 
             <!-- Product Title -->
@@ -105,14 +105,40 @@
                     Detail
                 </button>
 
-                <!-- Buy Action Button -->
-                <a href="{{ route('catalog.show', $product->slug) }}"
-                   class="w-full inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all hover:shadow active:scale-[0.98]">
+                <!-- Buy Action Button (FR-CART-01) -->
+                <button type="button"
+                        @click="
+                            fetch(`{{ route('ajax.cart.items.add') }}`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
+                                    'Accept': 'application/json',
+                                },
+                                body: JSON.stringify({ product_id: {{ $product->id }}, quantity: 1 })
+                            })
+                            .then(res => res.json())
+                            .then(res => {
+                                if (res.code === 'UNAUTHENTICATED' || res.redirect_url) {
+                                    window.location.href = res.redirect_url || '{{ route('login') }}';
+                                    return;
+                                }
+                                if (res.data) {
+                                    window.location.href = '{{ route('cart.index') }}';
+                                } else if (res.message) {
+                                    window.dispatchEvent(new CustomEvent('toast', { detail: { message: res.message, type: 'danger' } }));
+                                }
+                            })
+                            .catch(() => {
+                                window.location.href = '{{ route('catalog.show', $product->slug) }}';
+                            })
+                        "
+                        class="w-full inline-flex items-center justify-center gap-1.5 px-2.5 py-1.5 bg-primary-600 hover:bg-primary-700 text-white text-xs font-semibold rounded-lg shadow-sm transition-all hover:shadow active:scale-[0.98]">
                     <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
                     </svg>
                     Beli
-                </a>
+                </button>
             </div>
         </div>
     </div>

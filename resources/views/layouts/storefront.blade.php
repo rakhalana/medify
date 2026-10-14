@@ -103,7 +103,7 @@
                                        x-model="query"
                                        @input.debounce.300ms="fetchSuggestions()"
                                        @focus="if (suggestions.length > 0) showDropdown = true"
-                                       placeholder="Cari alat tensimeter, kursi roda, nebulizer, atau kode produk..."
+                                       placeholder="Cari alat kesehatan, nama produk, atau nama toko..."
                                        autocomplete="off"
                                        class="w-full pl-11 pr-24 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400 focus:bg-white focus:border-primary-500 focus:ring-4 focus:ring-primary-100 transition-all shadow-sm">
                                 <div class="absolute left-3.5 text-slate-400 pointer-events-none">
@@ -144,11 +144,10 @@
                                         </div>
                                         <div class="flex-1 min-w-0">
                                             <div class="text-sm font-semibold text-slate-900 truncate" x-text="item.name"></div>
-                                            <div class="text-xs text-slate-500 flex items-center gap-2 mt-0.5">
-                                                <span class="font-mono text-slate-400" x-text="item.code"></span>
-                                                <span>•</span>
-                                                <span x-text="item.store_name"></span>
-                                                <span class="text-slate-300">(<span x-text="item.store_city"></span>)</span>
+                                            <div class="text-xs text-slate-500 flex items-center gap-1.5 mt-0.5">
+                                                <span class="font-medium text-slate-700" x-text="item.store_name"></span>
+                                                <span class="text-slate-300">•</span>
+                                                <span class="text-slate-400" x-text="item.store_city"></span>
                                             </div>
                                         </div>
                                         <div class="text-right flex-shrink-0">
@@ -163,18 +162,24 @@
                     <!-- Right Navigation / Auth Actions -->
                     <div class="flex items-center gap-3">
 
-                        <!-- Cart Indicator -->
-                        <a href="{{ url('/cart') }}"
-                           class="relative p-2.5 rounded-xl border border-slate-200 text-slate-700 hover:text-primary-600 hover:border-primary-200 hover:bg-primary-50/50 transition-colors flex items-center justify-center group"
-                           title="Keranjang Belanja">
-                            <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
-                            </svg>
-                            <!-- Cart count badge -->
-                            <span class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-rose-500 text-white text-[11px] font-bold flex items-center justify-center shadow-sm">
-                                0
-                            </span>
-                        </a>
+                        <!-- Cart Indicator (Dynamic Alpine Badge) -->
+                        <div x-data="{ count: {{ Auth::check() ? (Auth::user()->cart?->items()->sum('quantity') ?? 0) : 0 }} }"
+                             @cart-updated.window="count = $event.detail.count">
+                            <a href="{{ route('cart.index') }}"
+                               class="relative p-2.5 rounded-xl border border-slate-200 text-slate-700 hover:text-primary-600 hover:border-primary-200 hover:bg-primary-50/50 transition-colors flex items-center justify-center group"
+                               title="Keranjang Belanja">
+                                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                                </svg>
+                                <!-- Cart count badge -->
+                                <span x-show="count > 0"
+                                      x-text="count"
+                                      class="absolute -top-1.5 -right-1.5 min-w-[20px] h-5 px-1 rounded-full bg-rose-500 text-white text-[11px] font-bold flex items-center justify-center shadow-sm"
+                                      style="{{ (Auth::check() && (Auth::user()->cart?->items()->sum('quantity') ?? 0) > 0) ? '' : 'display: none;' }}">
+                                    {{ Auth::check() ? (Auth::user()->cart?->items()->sum('quantity') ?? 0) : 0 }}
+                                </span>
+                            </a>
+                        </div>
 
                         @auth
                             <!-- User Dropdown with Role Badge -->
@@ -276,7 +281,7 @@
                         <input type="text"
                                name="q"
                                value="{{ request('q') }}"
-                               placeholder="Cari alat kesehatan..."
+                               placeholder="Cari alat kesehatan atau nama toko..."
                                class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm placeholder:text-slate-400">
                         <div class="absolute left-3 top-2.5 text-slate-400 pointer-events-none">
                             <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -365,5 +370,7 @@
 
         <!-- Toast Notifications Component -->
         <x-toast />
+
+        @stack('scripts')
     </body>
 </html>

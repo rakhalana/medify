@@ -339,9 +339,8 @@
                     <!-- Details -->
                     <div class="space-y-3">
                         <div class="flex items-center gap-2">
-                            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-primary-50 text-primary-800 border border-primary-200"
+                            <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-primary-50 text-primary-800 border border-primary-200"
                                   x-text="activeProduct?.category_name"></span>
-                            <span class="font-mono text-xs text-slate-400" x-text="activeProduct?.code"></span>
                         </div>
 
                         <h2 class="text-lg font-bold text-slate-900 leading-snug" x-text="activeProduct?.name"></h2>

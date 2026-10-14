@@ -150,6 +150,53 @@ class CatalogTest extends TestCase
         $resp2->assertSee('Pulse Oximeter Fingertip Medis');
     }
 
+    public function test_catalog_can_search_by_store_name(): void
+    {
+        $prodSby = Product::factory()->create([
+            'store_id' => $this->storeSurabaya->id, // Toko Alkes Sehat
+            'category_id' => $this->catDiagnostik->id,
+            'name' => 'Sterilizer UV Box',
+        ]);
+
+        $prodJkt = Product::factory()->create([
+            'store_id' => $this->storeJakarta->id, // Medika Jaya Mandiri
+            'category_id' => $this->catDiagnostik->id,
+            'name' => 'Infrared Thermometer Gun',
+        ]);
+
+        // Search by store name keyword "alkes sehat"
+        $response = $this->get('/?q=alkes+sehat');
+        $response->assertStatus(200);
+        $response->assertSee('Sterilizer UV Box');
+        $response->assertDontSee('Infrared Thermometer Gun');
+
+        // Search by store name keyword "medika jaya"
+        $response2 = $this->get('/?q=medika+jaya');
+        $response2->assertStatus(200);
+        $response2->assertSee('Infrared Thermometer Gun');
+        $response2->assertDontSee('Sterilizer UV Box');
+    }
+
+    public function test_catalog_can_search_by_category_name(): void
+    {
+        $prod1 = Product::factory()->create([
+            'store_id' => $this->storeSurabaya->id,
+            'category_id' => $this->catDiagnostik->id, // Diagnostik
+            'name' => 'Alat Cek Darah',
+        ]);
+
+        $prod2 = Product::factory()->create([
+            'store_id' => $this->storeJakarta->id,
+            'category_id' => $this->catMobilitas->id, // Mobilitas
+            'name' => 'Tongkat Ketiak Lansia',
+        ]);
+
+        $response = $this->get('/?q=mobilitas');
+        $response->assertStatus(200);
+        $response->assertSee('Tongkat Ketiak Lansia');
+        $response->assertDontSee('Alat Cek Darah');
+    }
+
     public function test_catalog_sorts_by_price_and_latest(): void
     {
         $cheap = Product::factory()->create([
